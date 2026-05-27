@@ -2,6 +2,7 @@
 #include <string>
 #include <string_view>
 #include <slim/common/http/headers.h>
+#include <slim/common/http/request.h>
 #include <slim/common/http/url.h>
 
 using namespace slim::common;
@@ -17,15 +18,19 @@ slim::common::http::Request::Request(const URL& _url) {
 	__headers.set("Host", _url.host());
 }
 
+const storage_container& slim::common::http::Request::body() const {
+	return __body;
+}
+
+const Headers& slim::common::http::Request::headers() const {
+	return __headers;
+}
+
 std::string_view slim::common::http::Request::method() const {
 	return __method;
 }
 
-storage_container& slim::common::http::Request::body() const {
-	return __body;
-}
-
-slim::common::http::URL& slim::common::http::Request::url() const {
+const URL& slim::common::http::Request::url() const {
 	return __url;
 }
 
@@ -33,7 +38,7 @@ std::string_view slim::common::http::Request::version() const {
 	return __version;
 }
 
-const std::string slim::common::http::Request::to_string() {
+const std::string slim::common::http::Request::to_string() const {
 	bool add_body = (__body.size() > 0 && __method != "GET" && __method != "DELETE") ? true : false;
 	bool has_content_length = false;
 	bool has_content_type = false;

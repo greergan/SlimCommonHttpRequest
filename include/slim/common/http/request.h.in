@@ -19,11 +19,12 @@ namespace slim::common::http {
 		Request(std::string_view _string);
 		Request(const URL& _url);
 
-		<storage_container& body() const;
-		slim::common::http::URL& url() const;
-		std::string& version() const;
-		std::string to_string() const;
-		bool is_valid() const;
+		const storage_container& body() const;
+		const Headers& headers() const;
+		std::string_view method() const;
+		const std::string to_string() const;
+		const URL& url() const;
+		std::string_view version() const;
 
 		private:
 			bool    __valid = false;
