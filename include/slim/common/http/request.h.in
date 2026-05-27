@@ -1,0 +1,38 @@
+#ifndef __SLIM__COMMON__HTTP__REQUEST__H
+#define __SLIM__COMMON__HTTP__REQUEST__H
+
+#include <cstdint>
+#include <string_view>
+#include <unordered_map>
+#include <vector>
+
+
+#include <slim/common/http/url.h>
+
+#define SLIMCOMMONHTTPREQUEST_VERSION "@SLIMCOMMONHTTPREQUEST_VERSION@"
+#define SLIMCOMMONHTTREQUEST_GIT_HASH "@SLIMCOMMONHTTREQUEST_GIT_HASH@"
+
+namespace slim::common::http {
+	using storage_container = std::vector<uint8_t>;
+	struct Request {
+		Request();
+		Request(std::string_view _string);
+		Request(const URL& _url);
+
+		<storage_container& body() const;
+		slim::common::http::URL& url() const;
+		std::string& version() const;
+		std::string to_string() const;
+		bool is_valid() const;
+
+		private:
+			bool    __valid = false;
+			Headers __headers;
+			URL     __url;
+			storage_container __body;
+			std::string __method  = "GET";
+			std::string __version = "HTTP/1.1";
+	};
+};
+
+#endif
