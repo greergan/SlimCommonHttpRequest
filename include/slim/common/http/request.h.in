@@ -5,9 +5,8 @@
 #include <string_view>
 #include <unordered_map>
 #include <vector>
-
-
 #include <slim/common/http/url.h>
+#include <slim/SlimValue.hpp>
 
 #define SLIMCOMMONHTTPREQUEST_VERSION "@SLIMCOMMONHTTPREQUEST_VERSION@"
 #define SLIMCOMMONHTTREQUEST_GIT_HASH "@SLIMCOMMONHTTREQUEST_GIT_HASH@"
@@ -20,6 +19,8 @@ namespace slim::common::http {
 		Request(const URL& _url);
 
 		const storage_container& body() const;
+		const slim::ErrorInfo& get_error() const;
+		bool has_error() const;
 		const Headers& headers() const;
 		std::string_view method() const;
 		const std::string to_string() const;
@@ -33,6 +34,8 @@ namespace slim::common::http {
 			storage_container __body;
 			std::string __method  = "GET";
 			std::string __version = "HTTP/1.1";
+			slim::ErrorInfo __error_info;
+			void set_headers();
 	};
 };
 
