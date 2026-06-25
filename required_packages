@@ -1,4 +1,5 @@
 # PackageName [minVersion [maxVersion]]
+SlimCommonHttp
 SlimCommonHttpCookie
 SlimCommonHttpCookieStore
 SlimCommonHttpHeader
