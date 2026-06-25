@@ -24,11 +24,11 @@ namespace slim::common::http {
         void version(std::string_view s) noexcept { version_ = s; }
         std::string serialize() const;
     private:
+        std::string          method_  = "GET";
+        std::string          version_ = "HTTP/1.1";
         Headers              headers_;
         URL                  url_;
         std::vector<uint8_t> body_;
-        std::string          method_;
-        std::string          version_;
         ErrorStatus set_headers();
     };
 };
