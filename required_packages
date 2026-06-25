@@ -5,4 +5,4 @@ SlimCommonHttpCookie
 SlimCommonHttpCookieStore
 SlimCommonHttpHeader
 SlimCommonHttpHeaders
-SlimCommonHttpUrl
+SlimCommonHttpUrl 0.9.1

@@ -27,10 +27,10 @@ Request::Request(std::string_view s) {
 }
 
 ErrorStatus Request::set_headers() {
-    if (iequals(url_.protocol(), "http") || iequals(url_.protocol(), "https")) {
-        auto error = headers_.set("Host", url_.host());
+    if (iequals(url_.protocol_, "http") || iequals(url_.protocol_, "https")) {
+        auto error = headers_.set("Host", url_.host_);
         if (error != ErrorStatus::OK) return error;
-        return headers_.set("Origin", url_.origin());
+        return headers_.set("Origin", url_.origin_);
     }
     return ErrorStatus::OK;
 }
@@ -40,7 +40,7 @@ std::string Request::serialize() const {
 
     const bool add_body = !body_.empty() && method_ != "GET" && method_ != "DELETE";
 
-    std::string pathname{url_.pathname()};
+    std::string pathname{url_.pathname_};
     if (pathname.empty()) pathname = "/";
 
     std::string result;
@@ -58,15 +58,8 @@ std::string Request::serialize() const {
         result += std::to_string(body_.size());
         result += "\r\n";
     }
-    if (!headers_.has("Content-Type")) {
-        result += "Content-Type: text/plain; charset=utf-8\r\n";
-    }
-
+    if (!headers_.has("Content-Type")) result += "Content-Type: text/plain; charset=utf-8\r\n";
     result += headers_.serialize();
-
-    if (add_body) {
-        result.insert(result.end(), body_.begin(), body_.end());
-    }
 
     return result;
 }
