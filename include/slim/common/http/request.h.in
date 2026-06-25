@@ -1,42 +1,35 @@
-#ifndef __SLIM__COMMON__HTTP__REQUEST__H
-#define __SLIM__COMMON__HTTP__REQUEST__H
-
+#ifndef SLIM_COMMON_HTTP_REQUEST_H
+#define SLIM_COMMON_HTTP_REQUEST_H
 #include <cstdint>
+#include <string>
 #include <string_view>
-#include <unordered_map>
 #include <vector>
 #include <slim/common/http/url.h>
-#include <slim/SlimValue.hpp>
-
+#include <slim/common/http/headers.h>
+#include <slim/common/http/error_codes.h>
 #define SLIMCOMMONHTTPREQUEST_VERSION "@SLIMCOMMONHTTPREQUEST_VERSION@"
-#define SLIMCOMMONHTTREQUEST_GIT_HASH "@SLIMCOMMONHTTREQUEST_GIT_HASH@"
-
+#define SLIMCOMMONHTTPREQUEST_GIT_HASH "@SLIMCOMMONHTTPREQUEST_GIT_HASH@"
 namespace slim::common::http {
-	using storage_container = std::vector<uint8_t>;
-	struct Request {
-		Request();
-		Request(std::string_view _string);
-		Request(const URL& _url);
-
-		const storage_container& body() const;
-		const slim::ErrorInfo& get_error() const;
-		bool has_error() const;
-		const Headers& headers() const;
-		std::string_view method() const;
-		const std::string to_string() const;
-		const URL& url() const;
-		std::string_view version() const;
-
-		private:
-			bool    __valid = false;
-			Headers __headers;
-			URL     __url;
-			storage_container __body;
-			std::string __method  = "GET";
-			std::string __version = "HTTP/1.1";
-			slim::ErrorInfo __error_info;
-			void set_headers();
-	};
+    class Request {
+    public:
+        Request() = default;
+        Request(std::string_view s);
+        Request(URL& url) : url_(url) { set_headers(); }
+        const std::vector<uint8_t>& body() const noexcept { return body_; }
+        const Headers& headers() const noexcept { return headers_; }
+        std::string_view method() const noexcept { return method_; }
+        void method(std::string_view s) noexcept { method_ = s; }
+        const URL& url() const noexcept { return url_; }
+        std::string_view version() const noexcept { return version_; }
+        void version(std::string_view s) noexcept { version_ = s; }
+        std::string serialize() const;
+    private:
+        Headers              headers_;
+        URL                  url_;
+        std::vector<uint8_t> body_;
+        std::string          method_;
+        std::string          version_;
+        ErrorStatus set_headers();
+    };
 };
-
-#endif
+#endif // SLIM_COMMON_HTTP_REQUEST_H
