@@ -6,3 +6,5 @@ SlimCommonHttpCookieStore
 SlimCommonHttpHeader
 SlimCommonHttpHeaders
 SlimCommonHttpUrl 0.9.1
+SlimCommonHttpUrlSearchParam
+SlimCommonHttpUrlSearchParams

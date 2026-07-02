@@ -1,6 +1,7 @@
 #ifndef SLIM_COMMON_HTTP_REQUEST_H
 #define SLIM_COMMON_HTTP_REQUEST_H
 #include <cstdint>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -13,23 +14,30 @@ namespace slim::common::http {
     class Request {
     public:
         Request() = default;
-        Request(std::string_view s);
-        Request(URL& url) : url_(url) { set_headers(); }
-        const std::vector<uint8_t>& body() const noexcept { return body_; }
-        const Headers& headers() const noexcept { return headers_; }
-        std::string_view method() const noexcept { return method_; }
-        void method(std::string_view s) noexcept { method_ = s; }
-        const URL& url() const noexcept { return url_; }
-        std::string_view version() const noexcept { return version_; }
-        void version(std::string_view s) noexcept { version_ = s; }
+        //Request(std::string_view s) { parse(s); }
+        Request(const URL& url);
+        ErrorStatus parse() noexcept;
+
+        std::span<uint8_t> get_body() noexcept;
+
+        const Headers& headers()     const noexcept { return headers_; }
+        std::string_view method()    const noexcept { return method_; }
+        const URL& url()             const noexcept { return url_; }
+        std::string_view version()   const noexcept { return version_; }
+
+        void set_body(std::vector<uint8_t>&& body) noexcept { body_ = std::move(body); }
+        void method(std::string_view s)        noexcept { method_ = s; }
+        void version(std::string_view s)       noexcept { version_ = s; }
+
         std::string serialize() const;
     private:
-        std::string          method_  = "GET";
-        std::string          version_ = "HTTP/1.1";
+        std::vector<uint8_t> body_;
         Headers              headers_;
         URL                  url_;
-        std::vector<uint8_t> body_;
+        std::string          method_      = "GET";
+        std::string          version_     = "HTTP/1.1";
+        int                  body_offset_ = -1;
         ErrorStatus set_headers();
     };
-};
+}
 #endif // SLIM_COMMON_HTTP_REQUEST_H
